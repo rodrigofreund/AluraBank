@@ -1,15 +1,14 @@
-class View <T> {
-    protected _elemento: Element;
+export abstract class View<T> {
+
+    private _elemento: JQuery;
 
     constructor(seletor: string) {
-        this._elemento = document.querySelector(seletor);
+        this._elemento = $(seletor);
     }
 
     update(model: T): void {
-        this._elemento.innerHTML = this.template(model);
+        this._elemento.html(this.template(model));
     }
 
-    template(model: T): string {
-        throw new Error('Você deve implementar o método template.');
-    }
+    abstract template(model: T): string;
 }
