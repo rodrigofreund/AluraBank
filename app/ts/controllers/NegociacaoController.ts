@@ -1,12 +1,12 @@
-import {NegociacoesView, MensagemView} from '../views/index';
-import {Negociacao, Negociacoes} from '../models/index';
+import { NegociacoesView, MensagemView } from '../views/index';
+import { Negociacao, Negociacoes } from '../models/index';
 
 export class NegociacaoController {
     private _inputData: JQuery;
     private _inputQuantidade: JQuery;
     private _inputValor: JQuery;
     private _negociacoes = new Negociacoes();
-    private _negociacoesView = new NegociacoesView('#negociacoesView');
+    private _negociacoesView = new NegociacoesView('#negociacoesView', true);
     private _mensagemView = new MensagemView('#mensagemView');
 
     constructor() {
@@ -19,16 +19,29 @@ export class NegociacaoController {
     adiciona(event: Event) {
         event.preventDefault();
 
-        const negociacao = new Negociacao(
-            new Date(this._inputData.val().toString().replace(/-/g, ',')),
-            parseInt(this._inputQuantidade.val().toString()),
-            parseFloat(this._inputValor.val().toString())
-        );
+        let inData = this._inputData;
+        let inQuant = this._inputQuantidade;
+        let inVal = this._inputValor;
 
-        console.log(negociacao)
-        this._negociacoes.adiciona(negociacao);
+        if(inData && inQuant && inVal) {
+            let data = inVal.val();
+            let quant = inQuant.val();
+            let val = inVal.val();
 
-        this._negociacoesView.update(this._negociacoes);
-        this._mensagemView.update('Negociação inserida com sucesso!');
+            if(!data || !quant || !val) {
+                throw new Error('Erro ao inserir evento.');
+            } else {
+                const negociacao = new Negociacao(
+                    new Date(this._inputData.val().toString().replace(/-/g, ',')),
+                    parseInt(this._inputQuantidade.val().toString()),
+                    parseFloat(this._inputValor.val().toString())
+                );
+        
+                this._negociacoes.adiciona(negociacao);
+        
+                this._negociacoesView.update(this._negociacoes);
+                this._mensagemView.update('Negociação inserida com sucesso!');
+            }
+        }
     }
 }
